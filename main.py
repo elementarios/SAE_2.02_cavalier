@@ -6,11 +6,12 @@ plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0]] #il est defini ici en exemple mais on pourrais crée une fonction a coté
+            [0,0,0,0,0,0,0,0]] #il est defini ici en exemple 
 
-taille = 0
+taille = 8
 
 compteur = 0 #le nombre de déplacement effectué
+
 nb_case = 0 #elle sera definit plus tard
 
 
@@ -64,9 +65,12 @@ def afficher():
     global plateau
     global taille
     for i in range(taille):
-        print(plateau[i])
+        ligne=""
+        for j in range(taille):
+            ligne+=str(plateau[i][j])+" " #la commande str transforme en string 
+        print(ligne)
 
-init(5)
+init(8)
 afficher()
 
 def ajoutDeDeplacement(x,y):
@@ -77,3 +81,29 @@ def ajoutDeDeplacement(x,y):
         y (int): cordonnée y de l'arrivée
     """
     global plateau
+    global compteur
+
+
+def annulerCoup():
+    """
+    Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant compteur
+    et retourne la position d'avant sous forme de tableau [x,y]
+    """
+
+
+def parcours(x,y):
+    """
+    fait le parcour de maniere récursive en mettant en notant sur la case chaque étape
+    
+    :param x: coordonnée x de la case de départ
+    :param y: coordonnée y de la case d'arrivée
+    """
+    global compteur
+    global nb_case
+    if(compteur >= nb_case):#cas de base
+        return None #on peut faire un return vide pour arreter la fonction
+    else:
+        return None #None a virer
+                    #il faut qu'on fasse un appelle recursive pour chaque mouvement
+
+                    #le probleme est de savoir quand un chemin mene a une impasse
