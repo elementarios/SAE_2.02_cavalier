@@ -37,7 +37,7 @@ def verification(x:int,y:int):
     Yvalide = y > -1 and y < taille
     return Xvalide and Yvalide and plateau[x][y]==0
 
-assert verification(0,0) == True , verification(0,0)
+assert verification(0,0) == True , verification(0,0) #c'est un test unitaire qui bloque si il est faux
 assert verification(-1,1) == False , verification(-1,1)
 
 
