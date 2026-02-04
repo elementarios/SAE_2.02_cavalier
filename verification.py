@@ -41,7 +41,7 @@ assert verification(0,0) == True , verification(0,0)
 assert verification(-1,1) == False , verification(-1,1)
 
 
-def créetableau(Ntaille):
+def init(Ntaille):
     """
     Docstring for créetableau
     
@@ -49,9 +49,16 @@ def créetableau(Ntaille):
     """
     global plateau
     global taille
+    global compteur
+    global nb_case
+
     taille = Ntaille
+    compteur = 0
+    nb_case = taille*taille
     plateau = [[0 for i in range(taille)]for j in range(taille)]
 
-créetableau(5)
-print(plateau)
 
+def afficher():
+    """affiche le plateau de maniere "classe"
+    """
+    global plateau
