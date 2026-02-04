@@ -62,3 +62,9 @@ def afficher():
     """affiche le plateau de maniere "classe"
     """
     global plateau
+    global taille
+    for i in range(taille):
+        print(plateau[i])
+
+init(5)
+afficher()
