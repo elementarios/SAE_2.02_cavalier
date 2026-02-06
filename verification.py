@@ -57,7 +57,7 @@ def init(Ntaille, x, y):
     compteur = 0
     nb_case = taille*taille #définition de la taille du plateau
     plateau = [[0 for i in range(taille)]for j in range(taille)] #on crée le tableau en compréhension
-    plateau = [1,x][1,y] #nous initialisons le premier sommet de l'échiquier à 1
+    plateau[x][y] = 1 #nous initialisons le premier sommet de l'échiquier à 1
 
 
 def afficher():
@@ -86,12 +86,23 @@ def ajoutDeDeplacement(x,y):
     
 
 
-def annulerCoup():
+def annulerCoup(plateau):
     """
     Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant compteur
     et retourne la position d'avant sous forme de tableau [x,y]
     """
-
+    global compteur
+    global x
+    global y
+    plateau[x][y] = 0
+    compteur -= 1
+    verifx = 0
+    verify = 0
+    while(plateau[verifx][verify] != compteur and verifx < taille):
+       while(plateau[verifx][verify] != compteur and verify < taille): 
+        if (plateau[verifx][verify] == compteur):
+            x = verifx
+            y = verify
 
 def parcours(x,y):
     """
@@ -107,7 +118,7 @@ def parcours(x,y):
     else:
         if (verification(x,y)):
             ajoutDeDeplacement(x,y)
-            compteur + 1
+            compteur += 1
             parcours(x,y)
         else:
             nb_case = 0
@@ -122,8 +133,8 @@ if ((taille % 2) == 0) :
     x = taille / 2 #nous faisons spawn le cavalier au milieu de l'échiquier
     y = taille / 2
 else:
-    x = (taille / 2) + 1
-    y = taille / 2
+    x = (taille % 2) + 1
+    y = taille % 2
 
 init(taille, x, y) #initialisation en fonction de la taille du plateau
 
