@@ -86,14 +86,13 @@ def ajoutDeDeplacement(x,y):
     
 
 
-def annulerCoup(plateau):
+def annulerCoup(x, y):
     """
     Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant compteur
     et retourne la position d'avant sous forme de tableau [x,y]
     """
     global compteur
-    global x
-    global y
+    global plateau
     plateau[x][y] = 0
     compteur -= 1
     verifx = 0
@@ -134,7 +133,7 @@ if ((taille % 2) == 0) :
     y = taille / 2
 else:
     x = (taille % 2) + 1
-    y = taille % 2
+    y = taille % 2 # il faudra coder une fonction qui pose aléatiorement le pion
 
 init(taille, x, y) #initialisation en fonction de la taille du plateau
 

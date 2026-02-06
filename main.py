@@ -70,9 +70,6 @@ def afficher():
             ligne+=str(plateau[i][j])+" " #la commande str transforme en string 
         print(ligne)
 
-init(8)
-afficher()
-
 def ajoutDeDeplacement(x,y):
     """modifie le plateau pour ajouter un deplacement
 
@@ -84,12 +81,22 @@ def ajoutDeDeplacement(x,y):
     global compteur
 
 
-def annulerCoup():
+def annulerCoup(x, y):
     """
     Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant compteur
     et retourne la position d'avant sous forme de tableau [x,y]
     """
-
+    global compteur
+    global plateau
+    plateau[x][y] = 0
+    compteur -= 1
+    verifx = 0
+    verify = 0
+    while(plateau[verifx][verify] != compteur and verifx < taille):
+       while(plateau[verifx][verify] != compteur and verify < taille): 
+        if (plateau[verifx][verify] == compteur):
+            x = verifx
+            y = verify
 
 def parcours(x,y):
     """
@@ -138,6 +145,19 @@ def voisins(x,y):
         tab.append(voi) #on rajoute a la fin du tableau
 
     return tab
+
+
+#PROGRAMME PRINCIPALE
+if ((taille % 2) == 0) :
+    x = taille / 2 #nous faisons spawn le cavalier au milieu de l'échiquier
+    y = taille / 2
+else:
+    x = (taille % 2) + 1
+    y = taille % 2 # il faudra coder une fonction qui pose aléatiorement le pion
+
+init(taille, x, y) #initialisation en fonction de la taille du plateau
+
+afficher()
 
 tab=voisins(5,6)
 print(tab)
