@@ -101,9 +101,35 @@ def parcours(x,y):
     global compteur
     global nb_case
     if(compteur >= nb_case):#cas de base
-        return None #on peut faire un return vide pour arreter la fonction
+        fini = True #on peut faire un return vide pour arreter la fonction
     else:
-        return None #None a virer
-                    #il faut qu'on fasse un appelle recursive pour chaque mouvement
+        fini = False
+        i=0
+        voisin=voisins(x,y)
+        while(not fini and i < len(voisin)):
+            fini = parcours(voisin[i][0],voisin[i][1])
+            i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
+        if(not fini):
+            annulerCoup()
 
-                    #le probleme est de savoir quand un chemin mene a une impasse
+    return fini
+
+def voisins(x,y):
+    
+    """retourne un tableau des voisin (sans verification) dans le style [[x,y][x,y]]
+
+    Args:
+        x (int): Coordonées x de la case
+        y (int): Coordonées y de la case
+    """
+    global deplacement
+    tab = [] #les tableau en python sont "étirable" donc pas besoin de mettre de taille
+    for i in range(len(deplacement)):
+
+        voi=[x+deplacement[i][0],y+deplacement[i][1]]
+        tab.append(voi) #on rajoute a la fin du tableau
+
+    return tab
+
+tab=voisins(5,6)
+print(tab)
