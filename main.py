@@ -102,20 +102,28 @@ def parcours(x,y):
     global nb_case
     if(compteur >= nb_case):#cas de base
         fini = True #on peut faire un return vide pour arreter la fonction
+    
     else:
         fini = False
         i=0
         voisin=voisins(x,y)
+
         while(not fini and i < len(voisin)):
-            fini = parcours(voisin[i][0],voisin[i][1])
+            x1,y1=voisin[i][0],voisin[i][1] #une double assignation
+
+            if(verification(x1,y1)):
+                ajoutDeDeplacement(x1,y1)
+                fini = parcours(x1,y1)#cas récusrif
+
             i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
+        
         if(not fini):
-            annulerCoup()
+            annulerCoup()#si on tombe dans une impasse
 
     return fini
 
 def voisins(x,y):
-    
+
     """retourne un tableau des voisin (sans verification) dans le style [[x,y][x,y]]
 
     Args:
