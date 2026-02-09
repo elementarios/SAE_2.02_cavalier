@@ -1,3 +1,5 @@
+from matplotlib import pylab as plt
+
 
 plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -79,6 +81,13 @@ def ajoutDeDeplacement(x,y):
     """
     global plateau
     global compteur
+    global deplacement
+    depX = deplacement[rand][1]
+    depY = deplacement[rand][2]
+    if (verification(x+depX, y+depY)):
+        x += depX
+        y += depY
+
 
 
 def annulerCoup(x, y):
@@ -108,6 +117,8 @@ def parcours(x,y):
     global compteur
     global nb_case
     if(compteur >= nb_case):#cas de base
+        #x = xDeb
+        #y = yDeb #Le cas 2 dans le cas ou l'on doit passer de la dernière case à la première
         fini = True #on peut faire un return vide pour arreter la fonction
     
     else:
@@ -145,6 +156,10 @@ def voisins(x,y):
         tab.append(voi) #on rajoute a la fin du tableau
 
     return tab
+
+def dessiner_chemin(x, y):
+    #ici il faudra faire le graphe du déplacement du cavalier à chaque tour via matplotlib
+
 
 
 #PROGRAMME PRINCIPALE
