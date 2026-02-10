@@ -83,7 +83,7 @@ def ajoutDeDeplacement(x,y):
     global compteur
     global deplacement
     depX = deplacement[rand][1]
-    depY = deplacement[rand][2]
+    depY = deplacement[rand][2] #il se passe comment le choix des déplacements ?
     if (verification(x+depX, y+depY)):
         x += depX
         y += depY
@@ -136,7 +136,7 @@ def parcours(x,y):
             i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
         
         if(not fini):
-            annulerCoup()#si on tombe dans une impasse
+            annulerCoup()#si on tombe dans une impasse (Backtracking)
 
     return fini
 
@@ -157,20 +157,14 @@ def voisins(x,y):
 
     return tab
 
-def dessiner_chemin(x, y):
-    #ici il faudra faire le graphe du déplacement du cavalier à chaque tour via matplotlib
+#def dessiner_chemin(x, y):
+    #dessiner le programme via console ou graphique (matplotlib peut-être)
 
 
 
 #PROGRAMME PRINCIPALE
-if ((taille % 2) == 0) :
-    x = taille / 2 #nous faisons spawn le cavalier au milieu de l'échiquier
-    y = taille / 2
-else:
-    x = (taille % 2) + 1
-    y = taille % 2 # il faudra coder une fonction qui pose aléatiorement le pion
-
-init(taille, x, y) #initialisation en fonction de la taille du plateau
+#test du programme avec tableau 5x5
+init(taille) #initialisation en fonction de la taille du plateau
 
 afficher()
 
