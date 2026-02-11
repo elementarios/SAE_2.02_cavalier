@@ -216,7 +216,7 @@ def commencer(x=-1 , y=-1):
 #test du programme avec tableau 5x5
 def main():
     global taille
-    taille = input("quelle taille doit faire le plateau")
+    taille = int(input("quelle taille doit faire le plateau: "))8
     init(taille) #initialisation en fonction de la taille du plateau
     afficher()
     case_debut=commencer()
