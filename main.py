@@ -1,4 +1,5 @@
 from matplotlib import pylab as plt
+from random import randint
 
 
 plateau = [[0,0,0,0,0,0,0,0],
@@ -186,6 +187,30 @@ def estCycle():
         if(plateau[v[0]][v[1]]==1):
             cycle = True
     return cycle
+
+
+def commencer(x=-1 , y=-1):
+    """permet d'initialiser le debut de la partie et retourne 
+    les coordonnées de la case de début sous la forme [x,y]
+    si aucune case n'est donnée alors elle sera choisis aléatoirement
+
+    Args:
+        x (int, optional): coordonnées X de la case. Defaults to -1.
+        y (int, optional): coordonnées Y de la case. Defaults to -1.
+    """
+    global plateau
+    global taille
+    global compteur
+    if (x == -1 and y ==-1):
+        x = randint(0,taille-1)
+        y = randint(0,taille-1)
+    
+    plateau[x][y] = 1
+    compteur = 1
+
+    return [x,y]
+
+
 
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5
