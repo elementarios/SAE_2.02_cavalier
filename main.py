@@ -252,13 +252,17 @@ def case(x,y):
        CA.left(90)          #   tourne de 90° vers la gauche
 
 def echequier():
+    """dessiner un echequier
+    """
     global taille
+    global debut_X
+    global debut_Y
     
-    x= -100
-    y= +100
+    x= debut_X
+    y= debut_Y
     case(x-longueur_case,y)
     for i in range(taille):
-        x=-100
+        x=debut_X
         for j in range(taille):
             case(x,y)
             x+= longueur_case
