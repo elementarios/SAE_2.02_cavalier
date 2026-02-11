@@ -82,12 +82,9 @@ def ajoutDeDeplacement(x,y):
     """
     global plateau
     global compteur
-    global deplacement
-    depX = deplacement[randint][1]
-    depY = deplacement[randint][2] #il se passe comment le choix des déplacements ?
-    if (verification(x+depX, y+depY)):
-        x += depX
-        y += depY
+    compteur+=1
+    plateau[x][y]=compteur
+    
 
 
 
