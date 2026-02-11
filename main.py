@@ -1,4 +1,4 @@
-from matplotlib import pylab as plt
+import matplotlib.pyplot as plt
 from random import randint
 
 
