@@ -97,13 +97,6 @@ def annulerCoup(x, y):
     global plateau
     plateau[x][y] = 0
     compteur -= 1
-    verifx = 0
-    verify = 0
-    while(plateau[verifx][verify] != compteur and verifx < taille):
-       while(plateau[verifx][verify] != compteur and verify < taille): 
-        if (plateau[verifx][verify] == compteur):
-            x = verifx
-            y = verify
 
 def parcours(x,y):
     """
@@ -114,6 +107,7 @@ def parcours(x,y):
     """
     global compteur
     global nb_case
+    
     if(compteur >= nb_case):#cas de base
         #x = xDeb
         #y = yDeb #Le cas 2 dans le cas ou l'on doit passer de la dernière case à la première
@@ -129,8 +123,8 @@ def parcours(x,y):
 
             if(verification(x1,y1)):
                 ajoutDeDeplacement(x1,y1)
+                
                 fini = parcours(x1,y1)#cas récusrif
-
             i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
         
         if(not fini):
@@ -198,12 +192,15 @@ def commencer(x=-1 , y=-1):
     global plateau
     global taille
     global compteur
-    if (x == -1 and y ==-1):
+    if (x == -1 or y ==-1):
         x = randint(0,taille-1)
         y = randint(0,taille-1)
     
-    plateau[x][y] = 1
-    compteur = 1
+    if(verification(x,y)):
+        plateau[x][y] = 1
+        compteur = 1
+    else:
+        raise ValueError("la case que vous avez mis n'est pas valide")
 
     return [x,y]
 
@@ -213,10 +210,11 @@ def commencer(x=-1 , y=-1):
 #test du programme avec tableau 5x5
 def main():
     global taille
-    taille = int(input("quelle taille doit faire le plateau: "))8
+    taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    afficher()
     case_debut=commencer()
+    afficher()
+    print("\n")
     parcours(case_debut[0],case_debut[1])
     afficher()
     cycle = estCycle()
