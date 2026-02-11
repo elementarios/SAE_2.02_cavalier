@@ -20,6 +20,7 @@ taille = 8
 
 debut_X = -100
 debut_Y = 100
+Milieu_premiere_case = [-87,87]
 longueur_case= 25
 
 compteur = 0 #le nombre de déplacement effectué
