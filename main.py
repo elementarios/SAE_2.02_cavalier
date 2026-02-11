@@ -1,6 +1,11 @@
 import matplotlib.pyplot as plt
 from random import randint
-
+from tkinter import *
+from turtle import * # importe le package turtle
+import turtle
+CA=Turtle()
+EC = Screen()
+EC.clear()
 
 plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -12,6 +17,10 @@ plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]] #il est defini ici en exemple 
 
 taille = 8
+
+debut_X = -100
+debut_Y = 100
+longueur_case= 25
 
 compteur = 0 #le nombre de déplacement effectué
 
@@ -223,4 +232,38 @@ def main():
     else:
         print("le chemin n'est pas un cycle")
 
-main()
+
+
+##espace dessin
+
+def case(x,y):
+    '''dessin d'une case'''
+    '''Remplit un carré d'arête longueur à partir du sommet (x, y).
+    Le premier coté est tracé dans la direction initiale de la tortue.
+    Le contour du carré est dessiné dans le sens horaire.
+    À la sortie, la tortue est en (x,y), dans la direction initiale'''
+    global longueur_case
+    CA.speed(2000)
+    CA.up()                 # lève le crayon
+    CA.goto(x, y)           # se déplace au point (x,y)
+    CA.down()               # baisse le crayon         
+    for k in range(4):      # quatre fois de suite
+       CA.forward(longueur_case)     #   trace un coté
+       CA.left(90)          #   tourne de 90° vers la gauche
+
+def echequier():
+    global taille
+    
+    x= -100
+    y= +100
+    case(x-longueur_case,y)
+    for i in range(taille):
+        x=-100
+        for j in range(taille):
+            case(x,y)
+            x+= longueur_case
+        y-=longueur_case
+
+echequier()
+
+exitonclick()
