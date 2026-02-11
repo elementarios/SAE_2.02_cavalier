@@ -83,8 +83,8 @@ def ajoutDeDeplacement(x,y):
     global plateau
     global compteur
     global deplacement
-    depX = deplacement[rand][1]
-    depY = deplacement[rand][2] #il se passe comment le choix des déplacements ?
+    depX = deplacement[randint][1]
+    depY = deplacement[randint][2] #il se passe comment le choix des déplacements ?
     if (verification(x+depX, y+depY)):
         x += depX
         y += depY
@@ -214,9 +214,11 @@ def commencer(x=-1 , y=-1):
 
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5
-init(taille) #initialisation en fonction de la taille du plateau
+def main():
+    taille = 5
+    init(taille) #initialisation en fonction de la taille du plateau
 
-afficher()
+    afficher()
 
-tab=voisins(5,6)
-print(tab)
+    tab=voisins(5,6)
+    print(tab)
