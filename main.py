@@ -137,7 +137,7 @@ def parcours(x,y):
             i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
         
         if(not fini):
-            annulerCoup()#si on tombe dans une impasse (Backtracking)
+            annulerCoup(x,y)#si on tombe dans une impasse (Backtracking)
 
     return fini
 
@@ -214,9 +214,18 @@ def commencer(x=-1 , y=-1):
 
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5
-init(taille) #initialisation en fonction de la taille du plateau
+def main():
+    global taille
+    taille = input("quelle taille doit faire le plateau")
+    init(taille) #initialisation en fonction de la taille du plateau
+    afficher()
+    case_debut=commencer()
+    parcours(case_debut[0],case_debut[1])
+    afficher()
+    cycle = estCycle()
+    if (cycle):
+        print("le chemin est un cycle")
+    else:
+        print("le chemin n'est pas un cycle")
 
-afficher()
-
-tab=voisins(5,6)
-print(tab)
+main()
