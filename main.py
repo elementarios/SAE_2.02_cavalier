@@ -272,3 +272,28 @@ def echequier():
 echequier()
 
 exitonclick()
+
+
+def etape(etape):
+
+    global taille
+    trouve = False
+    i=0
+    while(not trouve and i<taille):
+        j=0
+        while(not trouve and j<taille):
+            if(plateau[i][j]==etape):
+                x = i
+                y = j 
+            else:
+                j+=1
+        i+=1
+
+    return [x,y]            
+
+          
+
+
+
+
+
