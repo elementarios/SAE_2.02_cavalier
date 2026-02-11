@@ -161,6 +161,31 @@ def voisins(x,y):
     #dessiner le programme via console ou graphique (matplotlib peut-être)
 
 
+def estCycle():
+    """retourne un true si le le chemin trouvé est un cycle"""
+    global plateau
+    global compteur
+    global taille
+    i = 0
+    trouver = False
+
+    while(not trouver and i < taille):
+        j = 0
+        while(not trouver and j < taille):
+            if(plateau[i][j]==compteur):
+                x= i
+                y= j
+                trouver = True
+            else:
+                j+=1
+        i+=1
+    
+    voisin = voisins(x,y)
+    cycle= False
+    for v in voisin:
+        if(plateau[v[0]][v[1]]==1):
+            cycle = True
+    return cycle
 
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5
