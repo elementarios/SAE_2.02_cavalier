@@ -1,3 +1,11 @@
+import matplotlib.pyplot as plt
+from random import randint
+from tkinter import *
+from turtle import * # importe le package turtle
+import turtle
+CA=Turtle()
+EC = Screen()
+EC.clear()
 
 plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -8,7 +16,12 @@ plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]] #il est defini ici en exemple 
 
-taille = 8 #Définit ici comme une constante symbolique
+taille = 8
+
+debut_X = -100
+debut_Y = 100
+Milieu_premiere_case = [-87,87]
+longueur_case= 25
 
 compteur = 0 #le nombre de déplacement effectué
 
@@ -24,7 +37,7 @@ deplacement = [[1,2],
                [-2,1],
                [-2,-1]] #tableau recensent tout les déplacement possibles
 
-#Permet d'observer si une case de [x,y] n'a pas été visité. 
+
 def verification(x:int,y:int):
     """verifie si la case rentre en parametre est valide et retourne un booléen
 
@@ -41,23 +54,22 @@ def verification(x:int,y:int):
 assert verification(0,0) == True , verification(0,0) #c'est un test unitaire qui bloque si il est faux
 assert verification(-1,1) == False , verification(-1,1)
 
-#Initialisation de l'échiquier (taille, compteur, nb_case)
-def init(Ntaille, x, y):
+
+def init(Ntaille):
     """
     Docstring for créetableau
     
     :param taille: Description
     """
-    global plateau #appels des variables du programme principale
+    global plateau 
     global taille
     global compteur
     global nb_case
 
     taille = Ntaille
     compteur = 0
-    nb_case = taille*taille #définition de la taille du plateau
+    nb_case = taille*taille
     plateau = [[0 for i in range(taille)]for j in range(taille)] #on crée le tableau en compréhension
-    plateau[x][y] = 1 #nous initialisons le premier sommet de l'échiquier à 1
 
 
 def afficher():
@@ -65,10 +77,9 @@ def afficher():
     """
     global plateau
     global taille
-    for i in range(taille): #taille = 8
-        ligne="" #affichage de la chaine tab dans un string (comme la méthode java)
+    for i in range(taille):
+        ligne=""
         for j in range(taille):
-            #str transforme la case du tableau en chaine de caractères
             ligne+=str(plateau[i][j])+" " #la commande str transforme en string 
         print(ligne)
 
@@ -81,9 +92,10 @@ def ajoutDeDeplacement(x,y):
     """
     global plateau
     global compteur
-    #ici il faudrait faire un rand du tableau des déplacements ?
-
+    compteur+=1
+    plateau[x][y]=compteur
     
+
 
 
 def annulerCoup(x, y):
@@ -95,13 +107,6 @@ def annulerCoup(x, y):
     global plateau
     plateau[x][y] = 0
     compteur -= 1
-    verifx = 0
-    verify = 0
-    while(plateau[verifx][verify] != compteur and verifx < taille):
-       while(plateau[verifx][verify] != compteur and verify < taille): 
-        if (plateau[verifx][verify] == compteur):
-            x = verifx
-            y = verify
 
 def parcours(x,y):
     """
@@ -112,29 +117,158 @@ def parcours(x,y):
     """
     global compteur
     global nb_case
+    
     if(compteur >= nb_case):#cas de base
-        return None #on peut faire un return vide pour arreter la fonction
+        #x = xDeb
+        #y = yDeb #Le cas 2 dans le cas ou l'on doit passer de la dernière case à la première
+        fini = True #on peut faire un return vide pour arreter la fonction
+    
     else:
-        if (verification(x,y)):
-            ajoutDeDeplacement(x,y)
-            compteur += 1
-            parcours(x,y)
-        else:
-            nb_case = 0
-                    #None a virer
-                    #il faut qu'on fasse un appelle recursive pour chaque mouvement
+        fini = False
+        i=0
+        voisin=voisins(x,y)
 
-                    #le probleme est de savoir quand un chemin mene a une impasse
+        while(not fini and i < len(voisin)):
+            x1,y1=voisin[i][0],voisin[i][1] #une double assignation
+
+            if(verification(x1,y1)):
+                ajoutDeDeplacement(x1,y1)
+                
+                fini = parcours(x1,y1)#cas récusrif
+            i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
+        
+        if(not fini):
+            annulerCoup(x,y)#si on tombe dans une impasse (Backtracking)
+
+    return fini
+
+def voisins(x,y):
+
+    """retourne un tableau des voisin (sans verification) dans le style [[x,y][x,y]]
+
+    Args:
+        x (int): Coordonées x de la case
+        y (int): Coordonées y de la case
+    """
+    global deplacement
+    tab = [] #les tableau en python sont "étirable" donc pas besoin de mettre de taille
+    for i in range(len(deplacement)):
+
+        voi=[x+deplacement[i][0],y+deplacement[i][1]]
+        tab.append(voi) #on rajoute a la fin du tableau
+
+    return tab
+
+#def dessiner_chemin(x, y):
+    #dessiner le programme via console ou graphique (matplotlib peut-être)
+
+
+def estCycle():
+    """retourne un true si le le chemin trouvé est un cycle"""
+    global plateau
+    global compteur
+    global taille
+    i = 0
+    trouver = False
+
+    while(not trouver and i < taille):
+        j = 0
+        while(not trouver and j < taille):
+            if(plateau[i][j]==compteur):
+                x= i
+                y= j
+                trouver = True
+            else:
+                j+=1
+        i+=1
+    
+    voisin = voisins(x,y)
+    cycle= False
+    for v in voisin:
+        if(plateau[v[0]][v[1]]==1):
+            cycle = True
+    return cycle
+
+
+def commencer(x=-1 , y=-1):
+    """permet d'initialiser le debut de la partie et retourne 
+    les coordonnées de la case de début sous la forme [x,y]
+    si aucune case n'est donnée alors elle sera choisis aléatoirement
+
+    Args:
+        x (int, optional): coordonnées X de la case. Defaults to -1.
+        y (int, optional): coordonnées Y de la case. Defaults to -1.
+    """
+    global plateau
+    global taille
+    global compteur
+    if (x == -1 or y ==-1):
+        x = randint(0,taille-1)
+        y = randint(0,taille-1)
+    
+    if(verification(x,y)):
+        plateau[x][y] = 1
+        compteur = 1
+    else:
+        raise ValueError("la case que vous avez mis n'est pas valide")
+
+    return [x,y]
+
 
 
 #PROGRAMME PRINCIPALE
-if ((taille % 2) == 0) :
-    x = taille / 2 #nous faisons spawn le cavalier au milieu de l'échiquier
-    y = taille / 2
-else:
-    x = (taille % 2) + 1
-    y = taille % 2 # il faudra coder une fonction qui pose aléatiorement le pion
+#test du programme avec tableau 5x5
+def main():
+    global taille
+    taille = int(input("quelle taille doit faire le plateau: "))
+    init(taille) #initialisation en fonction de la taille du plateau
+    case_debut=commencer()
+    afficher()
+    print("\n")
+    parcours(case_debut[0],case_debut[1])
+    afficher()
+    cycle = estCycle()
+    if (cycle):
+        print("le chemin est un cycle")
+    else:
+        print("le chemin n'est pas un cycle")
 
-init(taille, x, y) #initialisation en fonction de la taille du plateau
 
-afficher()
+
+##espace dessin
+
+def case(x,y):
+    '''dessin d'une case'''
+    '''Remplit un carré d'arête longueur à partir du sommet (x, y).
+    Le premier coté est tracé dans la direction initiale de la tortue.
+    Le contour du carré est dessiné dans le sens horaire.
+    À la sortie, la tortue est en (x,y), dans la direction initiale'''
+    global longueur_case
+    CA.speed(2000)
+    CA.up()                 # lève le crayon
+    CA.goto(x, y)           # se déplace au point (x,y)
+    CA.down()               # baisse le crayon         
+    for k in range(4):      # quatre fois de suite
+       CA.forward(longueur_case)     #   trace un coté
+       CA.left(90)          #   tourne de 90° vers la gauche
+
+def echequier():
+    """dessiner un echequier
+    """
+    global taille
+    global debut_X
+    global debut_Y
+    
+    x= debut_X
+    y= debut_Y
+    case(x-longueur_case,y)
+    for i in range(taille):
+        x=debut_X
+        for j in range(taille):
+            case(x,y)
+            x+= longueur_case
+        y-=longueur_case
+
+echequier()
+
+exitonclick()

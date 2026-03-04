@@ -1,4 +1,6 @@
+#DÉFINITION DES BIBLIOTHÈQUES
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 from random import randint
 from tkinter import *
 from turtle import * # importe le package turtle
@@ -7,6 +9,7 @@ CA=Turtle()
 EC = Screen()
 EC.clear()
 
+#DÉFINITION DES VARIABLES PRINCIPALES
 plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -16,9 +19,9 @@ plateau = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]] #il est defini ici en exemple 
 
-taille = 8
+taille = 8 #taille d'exe
 
-debut_X = -100
+debut_X = -100 #position du crayon
 debut_Y = 100
 Milieu_premiere_case = [-87,87]
 longueur_case= 25
@@ -57,6 +60,7 @@ assert verification(-1,1) == False , verification(-1,1)
 
 def init(Ntaille):
     """
+    Initialise toutes les cases du plateau à zéro
     Docstring for créetableau
     
     :param taille: Description
@@ -87,8 +91,8 @@ def ajoutDeDeplacement(x,y):
     """modifie le plateau pour ajouter un deplacement
 
     Args:
-        x (int): cordonnée x de l'arrivée
-        y (int): cordonnée y de l'arrivée
+        x (int): cordonnée x de la case d'arrivée
+        y (int): cordonnée y de la case d'arrivée
     """
     global plateau
     global compteur
@@ -100,27 +104,69 @@ def ajoutDeDeplacement(x,y):
 
 def annulerCoup(x, y):
     """
-    Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant compteur
-    et retourne la position d'avant sous forme de tableau [x,y]
+    Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant le 
+    compteur et retourne la position d'avant sous forme de tableau [x,y]
     """
     global compteur
     global plateau
     plateau[x][y] = 0
     compteur -= 1
 
+def voisins(x,y):
+
+    """
+    Récupère les différentes possibilités de déplacement en fonction de la position
+    actuelle du cavalier (les voisins) et les répertories dans un tableau (sans vérification)
+    
+
+    Args:
+        x (int): Coordonées x de la case actuelle
+        y (int): Coordonées y de la case actuelle
+    """
+    global deplacement
+    tab = [] #les tableau en python sont "étirable" donc pas besoin de mettre de taille
+    for i in range(len(deplacement)): # renvoie la taille du tableau deplacement
+
+        voi=[x+deplacement[i][0],y+deplacement[i][1]] 
+        tab.append(voi) #ajout des valeurs des différents déplacements
+
+    return tab
+
+def commencer(x=-1 , y=-1):
+    """permet d'initialiser le debut de la partie et retourne 
+    les coordonnées de la case de début sous la forme [x,y]
+    si aucune case n'est donnée alors elle sera choisis aléatoirement
+
+    Args:
+        x (int, optional): coordonnées X de la case. Defaults to -1.
+        y (int, optional): coordonnées Y de la case. Defaults to -1.
+    """
+    global plateau
+    global taille
+    global compteur
+    if (x == -1 or y == -1):
+        x = randint(0,taille-1)
+        y = randint(0,taille-1)
+    
+    if(verification(x,y)):
+        plateau[x][y] = 1
+        compteur = 1
+    else:
+        raise ValueError("la case que vous avez mis n'est pas valide") #!!!
+
+    return [x,y]
+
 def parcours(x,y):
     """
-    fait le parcour de maniere récursive en mettant en notant sur la case chaque étape
+    fait le parcours de maniere récursive en notant chaque étape par case correspondante
     
-    :param x: coordonnée x de la case de départ
-    :param y: coordonnée y de la case d'arrivée
+    :param x: coordonnée x(ligne) de la case de départ
+    :param y: coordonnée y(colone) de la case de départ
     """
     global compteur
     global nb_case
     
     if(compteur >= nb_case):#cas de base
-        #x = xDeb
-        #y = yDeb #Le cas 2 dans le cas ou l'on doit passer de la dernière case à la première
         fini = True #on peut faire un return vide pour arreter la fonction
     
     else:
@@ -142,26 +188,7 @@ def parcours(x,y):
 
     return fini
 
-def voisins(x,y):
-
-    """retourne un tableau des voisin (sans verification) dans le style [[x,y][x,y]]
-
-    Args:
-        x (int): Coordonées x de la case
-        y (int): Coordonées y de la case
-    """
-    global deplacement
-    tab = [] #les tableau en python sont "étirable" donc pas besoin de mettre de taille
-    for i in range(len(deplacement)):
-
-        voi=[x+deplacement[i][0],y+deplacement[i][1]]
-        tab.append(voi) #on rajoute a la fin du tableau
-
-    return tab
-
-#def dessiner_chemin(x, y):
-    #dessiner le programme via console ou graphique (matplotlib peut-être)
-
+#Il faudrait implémenter le fait que notre retour vers 1 marche pour les cases impaires.
 
 def estCycle():
     """retourne un true si le le chemin trouvé est un cycle"""
@@ -189,51 +216,33 @@ def estCycle():
             cycle = True
     return cycle
 
-
-def commencer(x=-1 , y=-1):
-    """permet d'initialiser le debut de la partie et retourne 
-    les coordonnées de la case de début sous la forme [x,y]
-    si aucune case n'est donnée alors elle sera choisis aléatoirement
-
-    Args:
-        x (int, optional): coordonnées X de la case. Defaults to -1.
-        y (int, optional): coordonnées Y de la case. Defaults to -1.
-    """
-    global plateau
-    global taille
-    global compteur
-    if (x == -1 or y ==-1):
-        x = randint(0,taille-1)
-        y = randint(0,taille-1)
-    
-    if(verification(x,y)):
-        plateau[x][y] = 1
-        compteur = 1
-    else:
-        raise ValueError("la case que vous avez mis n'est pas valide")
-
-    return [x,y]
-
-
-
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5
 def main():
     global taille
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    case_debut=commencer()
-    afficher()
-    print("\n")
-    parcours(case_debut[0],case_debut[1])
-    afficher()
-    cycle = estCycle()
-    if (cycle):
-        print("le chemin est un cycle")
-    else:
-        print("le chemin n'est pas un cycle")
+    i=0
+    for i in range(5):
+        j = 4
+        for j in range(5): 
+            case_debut=commencer(i,j)
+            afficher()
+            print("\n")
+            parcours(case_debut[0],case_debut[1])
+            afficher()
+            cycle = estCycle()
+            if (cycle):
+                print("le chemin est un cycle")
+            else:
+                print("le chemin n'est pas un cycle")
 
-
+def cordonne(x, y):
+    """ retourne la cordonnée du cavalier sur le graphe"""
+    global Milieu_premiere_case
+    global longueur_case
+    x * longueur_case
+    y * longueur_case
 
 ##espace dessin
 
@@ -252,6 +261,8 @@ def case(x,y):
        CA.forward(longueur_case)     #   trace un coté
        CA.left(90)          #   tourne de 90° vers la gauche
 
+
+
 def echequier():
     """dessiner un echequier
     """
@@ -262,17 +273,14 @@ def echequier():
     x= debut_X
     y= debut_Y
     case(x-longueur_case,y)
+    indice = 1
     for i in range(taille):
         x=debut_X
         for j in range(taille):
             case(x,y)
             x+= longueur_case
+            cordonne(taille, x, y)
         y-=longueur_case
-
-echequier()
-
-exitonclick()
-
 
 def etape(etape):
 
@@ -291,9 +299,8 @@ def etape(etape):
 
     return [x,y]            
 
-          
+#
+main()
+echequier()
 
-
-
-
-
+exitonclick()
