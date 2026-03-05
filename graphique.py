@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+taille = int(input("quelle taille ? : "))
 
-
-aff = plt.subplots(
-    figsize=(8, 4),
+fig, aff = plt.subplots(
+    figsize=(10, 5),
     facecolor="lightgrey",
     layout="constrained",
     subplot_kw={
@@ -17,21 +17,13 @@ plt.suptitle(
     weight="bold"
 )
 
-odd_row = np.array([bool(x) for x in [1, 0, 1, 0, 1, 0, 1, 0]])
-~odd_row
+# CORRECTION ICI : np.indices attend un tuple (taille, taille)
+chess = np.indices((taille, taille)).sum(axis=0) % 2
 
-chess = np.array([[1,0,1,0,1,0,1,0],
-                  [0,1,0,1,0,1,0,1],
-                  [1,0,1,0,1,0,1,0],
-                  [0,1,0,1,0,1,0,1],
-                  [1,0,1,0,1,0,1,0],
-                  [0,1,0,1,0,1,0,1],
-                  [1,0,1,0,1,0,1,0],
-                  [0,1,0,1,0,1,0,1]])
+# On dessine sur l'axe 'aff'
+aff.imshow(chess, cmap='gray')
+aff.invert_yaxis() # remettre les chiffres de droite a l'envers.
 
-
-plt.figure(figsize=(10,10))
-plt.imshow(chess, cmap='gray')
-plt.axis(False)
+# Réglages de l'axe
 
 plt.show()
