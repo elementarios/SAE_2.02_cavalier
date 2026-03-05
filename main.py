@@ -144,15 +144,15 @@ def commencer(x=-1 , y=-1):
     global plateau
     global taille
     global compteur
-    if (x == -1 or y == -1):
+    if (x == -1 or y == -1):#si il y a -1 on considere que le joueur veut une case aléatoire
         x = randint(0,taille-1)
         y = randint(0,taille-1)
     
-    if(verification(x,y)):
+    if(verification(x,y)):#on verifie que la partie peut commencer
         plateau[x][y] = 1
         compteur = 1
     else:
-        raise ValueError("la case que vous avez mis n'est pas valide") #!!!
+        raise ValueError("la case que vous avez mis n'est pas valide") #on previent que le joueur n'a pas saisie une bonne valeur
 
     return [x,y]
 
@@ -195,19 +195,8 @@ def estCycle():
     global plateau
     global compteur
     global taille
-    i = 0
-    trouver = False
 
-    while(not trouver and i < taille):
-        j = 0
-        while(not trouver and j < taille):
-            if(plateau[i][j]==compteur):
-                x= i
-                y= j
-                trouver = True
-            else:
-                j+=1
-        i+=1
+    x,y=etape(compteur)
     
     voisin = voisins(x,y)
     cycle= False
