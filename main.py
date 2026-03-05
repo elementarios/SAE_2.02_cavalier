@@ -1,6 +1,7 @@
 #DÉFINITION DES BIBLIOTHÈQUES
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+import numpy as np
 from random import randint
 from tkinter import *
 from turtle import * # importe le package turtle
@@ -188,7 +189,23 @@ def parcours(x,y):
 
     return fini
 
-#Il faudrait implémenter le fait que notre retour vers 1 marche pour les cases impaires.
+def derniereP(etape):
+    '''retourne la dernière position du joueur'''
+    global taille
+    trouve = False
+    i=0
+    while(not trouve and i<taille):
+        j=0
+        while(not trouve and j<taille):
+            if(plateau[i][j]==etape): 
+                x = i
+                y = j 
+                trouve = True 
+            else:
+                j+=1
+        i+=1
+
+    return [x,y]    
 
 def estCycle():
     """retourne un true si le le chemin trouvé est un cycle"""
@@ -196,19 +213,18 @@ def estCycle():
     global compteur
     global taille
 
-    x,y=etape(compteur)
+    x,y=derniereP(compteur)
     
-    voisin = voisins(x,y)
+    voisins = voisins(x,y)
     cycle= False
-    for v in voisin:
-        if(plateau[v[0]][v[1]]==1):
+    for v in voisins:
+        if plateau[v[0]][v[1]] == 1:
             cycle = True
     return cycle
 
 #PROGRAMME PRINCIPALE
-#test du programme avec tableau 5x5
+#test du programme avec tableau 5x5 UPDATE : fonctionne
 def main():
-    global taille
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
     i=0
@@ -233,7 +249,38 @@ def cordonne(x, y):
     x * longueur_case
     y * longueur_case
 
-##espace dessin
+
+
+##ESPACE DESSIN
+
+def aff_graphique():
+    '''Affiche le plateau et dessine le parcours du cavalier
+        a l'aide du logiciel matplotlib'''
+    global taille
+    fig, aff = plt.subplots(
+        figsize=(10, 5),
+        facecolor="lightgrey",
+        layout="constrained",
+        subplot_kw={
+            "aspect": "equal"
+        }
+    )
+    plt.suptitle(
+        "Résolution du problème du cavalier",
+        fontsize=20,
+        weight="bold"
+    )
+
+    # CORRECTION ICI : np.indices attend un tuple (taille, taille)
+    chess = np.indices((taille, taille)).sum(axis=0) % 2
+
+    # On dessine sur l'axe 'aff'
+    aff.imshow(chess, cmap='gray')
+    aff.invert_yaxis() # remettre les chiffres de droite a l'envers.
+
+    # Réglages de l'axe
+
+    plt.show()
 
 def case(x,y):
     '''dessin d'une case'''
@@ -249,8 +296,6 @@ def case(x,y):
     for k in range(4):      # quatre fois de suite
        CA.forward(longueur_case)     #   trace un coté
        CA.left(90)          #   tourne de 90° vers la gauche
-
-
 
 def echequier():
     """dessiner un echequier
@@ -269,27 +314,7 @@ def echequier():
             case(x,y)
             x+= longueur_case
             cordonne(taille, x, y)
-        y-=longueur_case
-
-def etape(etape):
-
-    global taille
-    trouve = False
-    i=0
-    while(not trouve and i<taille):
-        j=0
-        while(not trouve and j<taille):
-            if(plateau[i][j]==etape):
-                x = i
-                y = j 
-            else:
-                j+=1
-        i+=1
-
-    return [x,y]            
+        y-=longueur_case        
 
 #
 main()
-echequier()
-
-exitonclick()
