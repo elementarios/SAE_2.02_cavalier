@@ -24,8 +24,9 @@ taille = 8 #taille d'exe
 
 debut_X = -100 #position du crayon
 debut_Y = 100
-Milieu_premiere_case = [-87,87]
+Milieu_premiere_case = [-82,112] #position de la première case
 longueur_case= 25
+
 
 compteur = 0 #le nombre de déplacement effectué
 
@@ -99,9 +100,6 @@ def ajoutDeDeplacement(x,y):
     global compteur
     compteur+=1
     plateau[x][y]=compteur
-    
-
-
 
 def annulerCoup(x, y):
     """
@@ -133,7 +131,7 @@ def voisins(x,y):
 
     return tab
 
-def commencer(x=-1 , y=-1):
+def commencer(x=1 , y=3):
     """permet d'initialiser le debut de la partie et retourne 
     les coordonnées de la case de début sous la forme [x,y]
     si aucune case n'est donnée alors elle sera choisis aléatoirement
@@ -145,18 +143,15 @@ def commencer(x=-1 , y=-1):
     global plateau
     global taille
     global compteur
-
-    for i in range (taille):
-        for j in range (taille):
-            plateau[i][j] = 0
-
-
-    if (x == -1 or y == -1):
+    if (x == -1 or y == -1):#si il y a -1 on considere que le joueur veut une case aléatoire
         x = randint(0,taille-1)
         y = randint(0,taille-1)
-   
-    plateau[x][y] = 1
-    compteur = 1
+    
+    if(verification(x,y)):#on verifie que la partie peut commencer
+        plateau[x][y] = 1
+        compteur = 1
+    else:
+        print("la case que vous avez mis n'est pas valide") #on previent que le joueur n'a pas saisie une bonne valeur
 
     return [x,y]
 
@@ -183,7 +178,7 @@ def parcours(x,y):
 
             if(verification(x1,y1)):
                 ajoutDeDeplacement(x1,y1)
-                
+
                 fini = parcours(x1,y1)#cas récusrif
             i+=1 #le i++ n'existe pas on fait i+=1 qui vaut i=i+1
         
@@ -229,10 +224,9 @@ def estCycle():
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5 UPDATE : fonctionne
 def main():
-    global taille
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    case_debut=commencer()
+    case_debut=commencer(-1,-1)
     afficher()
     print("\n")
     parcours(case_debut[0],case_debut[1])
@@ -242,6 +236,7 @@ def main():
         print("le chemin est un cycle")
     else:
         print("le chemin n'est pas un cycle")
+    
 
 def cordonne(x, y):
     """ retourne la cordonnée du cavalier sur le graphe"""
@@ -277,7 +272,6 @@ def aff_graphique():
 
     # On dessine sur l'axe 'aff'
     aff.imshow(chess, cmap='gray')
-    aff.invert_yaxis() # remettre les chiffres de droite a l'envers.
 
     # Réglages de l'axe
 
@@ -290,6 +284,7 @@ def case(x,y):
     Le contour du carré est dessiné dans le sens horaire.
     À la sortie, la tortue est en (x,y), dans la direction initiale'''
     global longueur_case
+    CA.showturtle()
     CA.speed(2000)
     CA.up()                 # lève le crayon
     CA.goto(x, y)           # se déplace au point (x,y)
@@ -298,26 +293,41 @@ def case(x,y):
        CA.forward(longueur_case)     #   trace un coté
        CA.left(90)          #   tourne de 90° vers la gauche
 
+def cordoneCase(x,y):
+    '''convertit les cordonnées du parcours sur turtle'''
+    global longueur_case
+    CA.speed(1)
+    depX = debut_X+(y*longueur_case) + (longueur_case/2)
+    depY = debut_Y-(x*longueur_case) - (longueur_case/2) #!! TODO : il faut le déplacer un peu vers le haut.
+    CA.goto(depX, depY)
+
+
 def echequier():
-    """dessiner un echequier
+    """dessiner un echequier avec turtle
     """
     global taille
+    global compteur
     global debut_X
     global debut_Y
     
     x= debut_X
     y= debut_Y
     case(x-longueur_case,y)
-    indice = 1
     for i in range(taille):
         x=debut_X
         for j in range(taille):
             case(x,y)
             x+= longueur_case
             cordonne(x, y)
-        y-=longueur_case        
+        y-=longueur_case
+    CA.up()
+    for i in range(1,compteur+1):
+        x,y=derniereP(i)
+        cordoneCase(x,y)
+        CA.down()
 
-#
+
 main()
+echequier()
 
-
+exitonclick()
