@@ -153,7 +153,7 @@ def commencer(x=-1 , y=-1):
         plateau[x][y] = 1
         compteur = 1
     else:
-        raise ValueError("la case que vous avez mis n'est pas valide") #on previent que le joueur n'a pas saisie une bonne valeur
+        print("la case que vous avez mis n'est pas valide") #on previent que le joueur n'a pas saisie une bonne valeur
 
     return [x,y]
 
@@ -215,11 +215,12 @@ def estCycle():
 
     x,y=derniereP(compteur)
     
-    voisins = voisins(x,y)
+    voisin = voisins(x,y)
     cycle= False
-    for v in voisins:
-        if plateau[v[0]][v[1]] == 1:
-            cycle = True
+    for v in voisin:
+        if verification(v[0],v[1]):
+            if plateau[v[0]][v[1]] == 1:
+                cycle = True
     return cycle
 
 #PROGRAMME PRINCIPALE
@@ -313,8 +314,10 @@ def echequier():
         for j in range(taille):
             case(x,y)
             x+= longueur_case
-            cordonne(taille, x, y)
+            cordonne(x, y)
         y-=longueur_case        
 
 #
 main()
+echequier()
+
