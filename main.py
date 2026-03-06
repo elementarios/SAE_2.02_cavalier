@@ -145,15 +145,18 @@ def commencer(x=-1 , y=-1):
     global plateau
     global taille
     global compteur
-    if (x == -1 or y == -1):#si il y a -1 on considere que le joueur veut une case aléatoire
+
+    for i in range (taille):
+        for j in range (taille):
+            plateau[i][j] = 0
+
+
+    if (x == -1 or y == -1):
         x = randint(0,taille-1)
         y = randint(0,taille-1)
-    
-    if(verification(x,y)):#on verifie que la partie peut commencer
-        plateau[x][y] = 1
-        compteur = 1
-    else:
-        print("la case que vous avez mis n'est pas valide") #on previent que le joueur n'a pas saisie une bonne valeur
+   
+    plateau[x][y] = 1
+    compteur = 1
 
     return [x,y]
 
@@ -226,22 +229,19 @@ def estCycle():
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5 UPDATE : fonctionne
 def main():
+    global taille
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    i=0
-    for i in range(5):
-        j = 4
-        for j in range(5): 
-            case_debut=commencer(i,j)
-            afficher()
-            print("\n")
-            parcours(case_debut[0],case_debut[1])
-            afficher()
-            cycle = estCycle()
-            if (cycle):
-                print("le chemin est un cycle")
-            else:
-                print("le chemin n'est pas un cycle")
+    case_debut=commencer()
+    afficher()
+    print("\n")
+    parcours(case_debut[0],case_debut[1])
+    afficher()
+    cycle = estCycle()
+    if (cycle):
+        print("le chemin est un cycle")
+    else:
+        print("le chemin n'est pas un cycle")
 
 def cordonne(x, y):
     """ retourne la cordonnée du cavalier sur le graphe"""
@@ -319,5 +319,5 @@ def echequier():
 
 #
 main()
-echequier()
+
 
