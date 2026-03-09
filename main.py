@@ -223,10 +223,10 @@ def estCycle():
 
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5 UPDATE : fonctionne
-def main():
+def main(x=-1,y=-1):
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    case_debut=commencer(-1,-1)
+    case_debut=commencer(x,y)
     afficher()
     print("\n")
     parcours(case_debut[0],case_debut[1])
@@ -242,8 +242,9 @@ def cordonne(x, y):
     """ retourne la cordonnée du cavalier sur le graphe"""
     global Milieu_premiere_case
     global longueur_case
-    x * longueur_case
-    y * longueur_case
+    x=Milieu_premiere_case[0]+(x * longueur_case)
+    y=Milieu_premiere_case[1]-(y * longueur_case)
+    return x,y
 
 
 
@@ -309,6 +310,7 @@ def echequier():
     global compteur
     global debut_X
     global debut_Y
+    global Milieu_premiere_case
     
     x= debut_X
     y= debut_Y
@@ -321,13 +323,15 @@ def echequier():
             cordonne(x, y)
         y-=longueur_case
     CA.up()
+    CA.goto(Milieu_premiere_case[0],Milieu_premiere_case[1])
+    CA.down()
     for i in range(1,compteur+1):
         x,y=derniereP(i)
-        cordoneCase(x,y)
-        CA.down()
+        x,y=cordonne(x,y)
+        CA.goto(x,y)
 
 
-main()
+main(0,0)
 echequier()
 
 exitonclick()
