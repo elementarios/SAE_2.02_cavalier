@@ -1,7 +1,7 @@
 Pour que le plateau de taille N x M possede un tour fermé il faut plusieurs conditions
 
-1) Que le plateau possede un nombre pair de case donc il ne faut que soit
-    N soit M soit un nombre pair.
+1) Que le plateau possede un nombre pair de case donc il ne faut pas que 
+    N et M soit tout les deux des nombre impair (1 seul max).
 
 2) Que le cavalier puisse allez sur tout les case donc les plateau "ligne" et "colonne"
     ne sont pas valable soit N et M doivent etre different de 1
