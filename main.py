@@ -43,6 +43,11 @@ deplacement = [[1,2],
                [-2,-1]] #tableau recensent tout les déplacement possibles
 
 
+
+
+
+
+
 def verification(x:int,y:int):
     """verifie si la case rentre en parametre est valide et retourne un booléen
 
@@ -58,6 +63,9 @@ def verification(x:int,y:int):
 
 assert verification(0,0) == True , verification(0,0) #c'est un test unitaire qui bloque si il est faux
 assert verification(-1,1) == False , verification(-1,1)
+
+
+
 
 
 def init(Ntaille):
@@ -78,6 +86,8 @@ def init(Ntaille):
     plateau = [[0 for i in range(taille)]for j in range(taille)] #on crée le tableau en compréhension
 
 
+
+
 def afficher():
     """affiche le plateau de maniere "classe"
     """
@@ -88,6 +98,10 @@ def afficher():
         for j in range(taille):
             ligne+=str(plateau[i][j])+" " #la commande str transforme en string 
         print(ligne)
+
+
+
+
 
 def ajoutDeDeplacement(x,y):
     """modifie le plateau pour ajouter un deplacement
@@ -101,6 +115,9 @@ def ajoutDeDeplacement(x,y):
     compteur+=1
     plateau[x][y]=compteur
 
+
+
+
 def annulerCoup(x, y):
     """
     Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant le 
@@ -110,6 +127,9 @@ def annulerCoup(x, y):
     global plateau
     plateau[x][y] = 0
     compteur -= 1
+
+
+
 
 def voisins(x,y):
 
@@ -130,6 +150,9 @@ def voisins(x,y):
         tab.append(voi) #ajout des valeurs des différents déplacements
 
     return tab
+
+
+
 
 def commencer(x=1 , y=3):
     """permet d'initialiser le debut de la partie et retourne 
@@ -154,6 +177,9 @@ def commencer(x=1 , y=3):
         print("la case que vous avez mis n'est pas valide") #on previent que le joueur n'a pas saisie une bonne valeur
 
     return [x,y]
+
+
+
 
 def parcours(x,y):
     """
@@ -187,8 +213,19 @@ def parcours(x,y):
 
     return fini
 
+
+
+
+
 def derniereP(etape):
-    '''retourne la dernière position du joueur'''
+    """trouve les coordonné de la case pour une etape précise
+
+    Args:
+        etape (int): le numéro de l'etape que vous souhaitez trouver
+
+    Returns:
+        tab[int]: un tableau contenant les coordonnées de la case
+    """
     global taille
     trouve = False
     i=0
@@ -224,19 +261,32 @@ def estCycle():
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5 UPDATE : fonctionne
 def main(x=-1,y=-1):
+    """permet d'executer le script tout entier si vous ne mettez rien le 
+        cavalier partira d'une case aléatoire
+
+    Args:
+        x (int, optional): la coordonnées X d'ou part le cavalier. Defaults to -1.
+        y (int, optional): la coordonnées Y d'ou part le cavalier. Defaults to -1.
+    """
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    case_debut=commencer(x,y)
-    afficher()
+    case_debut=commencer(x,y)#on selectionne la case du début
+    afficher()#on affiche l'echequier de basse
     print("\n")
-    parcours(case_debut[0],case_debut[1])
-    afficher()
-    cycle = estCycle()
+    parcours(case_debut[0],case_debut[1])#on fait le parcourt
+    afficher()#on affiche une fois terminer
+    cycle = estCycle()#on dit a l'utilisateur si le chemin est un cycle
     if (cycle):
         print("le chemin est un cycle")
     else:
         print("le chemin n'est pas un cycle")
     
+
+
+
+
+
+##ESPACE DESSIN
 
 def cordonne(x, y):
     """ retourne la cordonnée du cavalier sur le graphe"""
@@ -245,38 +295,6 @@ def cordonne(x, y):
     x=Milieu_premiere_case[0]+(x * longueur_case)
     y=Milieu_premiere_case[1]-(y * longueur_case)
     return x,y
-
-
-
-##ESPACE DESSIN
-
-def aff_graphique():
-    '''Affiche le plateau et dessine le parcours du cavalier
-        a l'aide du logiciel matplotlib'''
-    global taille
-    fig, aff = plt.subplots(
-        figsize=(10, 5),
-        facecolor="lightgrey",
-        layout="constrained",
-        subplot_kw={
-            "aspect": "equal"
-        }
-    )
-    plt.suptitle(
-        "Résolution du problème du cavalier",
-        fontsize=20,
-        weight="bold"
-    )
-
-    # CORRECTION ICI : np.indices attend un tuple (taille, taille)
-    chess = np.indices((taille, taille)).sum(axis=0) % 2
-
-    # On dessine sur l'axe 'aff'
-    aff.imshow(chess, cmap='gray')
-
-    # Réglages de l'axe
-
-    plt.show()
 
 def case(x,y):
     '''dessin d'une case'''
@@ -294,17 +312,10 @@ def case(x,y):
        CA.forward(longueur_case)     #   trace un coté
        CA.left(90)          #   tourne de 90° vers la gauche
 
-def cordoneCase(x,y):
-    '''convertit les cordonnées du parcours sur turtle'''
-    global longueur_case
-    CA.speed(1)
-    depX = debut_X+(y*longueur_case) + (longueur_case/2)
-    depY = debut_Y-(x*longueur_case) - (longueur_case/2) #!! TODO : il faut le déplacer un peu vers le haut.
-    CA.goto(depX, depY)
 
 
 def echequier():
-    """dessiner un echequier avec turtle
+    """dessiner un echequier et le deplacement du cavalier avec turtle
     """
     global taille
     global compteur
@@ -331,7 +342,9 @@ def echequier():
         CA.goto(x,y)
 
 
+
+
+###Zone d'execution
 main(0,0)
 echequier()
-
 exitonclick()
