@@ -1,7 +1,4 @@
 #DÉFINITION DES BIBLIOTHÈQUES
-import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
-import numpy as np
 from random import randint
 from tkinter import *
 from turtle import * # importe le package turtle
@@ -41,9 +38,6 @@ deplacement = [[1,2],
                [2,-1],
                [-2,1],
                [-2,-1]] #tableau recensent tout les déplacement possibles
-
-
-
 
 
 
@@ -153,8 +147,46 @@ def voisins(x,y):
 
 
 
+def degre(x,y):
+    '''
+    Le problème que pose le backtracking, c'est qu'il est gourmand en ressource.
+    
+    Pour combler ce problème, nous allons créer une **fonction qui retourne les différents 
+    degrés des voisins de notre position (L'heuristique de warnsdorff) et leur cordonnées sous 
+    forme de tableau**.
+    Nous sélectionnerons donc les voisins avec les poids les plus petits afin de s'occuper 
+    des coins les plus compliqués au début (Utilisation casi inexistante du backtracking).
+    --------------------------
 
-def commencer(x=1 , y=3):
+    '''
+    global plateau
+    global taille
+    listePoids = [] #liste des poids des voisins et leur cordonnées
+    voisin = voisins(x,y)
+    for i in voisin:
+        if (verification(i[0], i[1]) and plateau[i[0]][i[1]] == 0): #
+            poids = 0
+            voisin2 = voisins(i[0], i[1])
+            for j in voisin2:
+                if (verification(j[0], j[1]) and plateau[j[0]][j[1]] == 0):
+                    poids += 1
+            listePoids.append((poids, (i[0], i[1])))
+
+    
+    
+    for i in range(len(listePoids)):
+        for j in range(0, len(listePoids)-i-1):
+            if (listePoids[j][0]>listePoids[j+1][0]):
+                reserve = listePoids[j]
+                listePoids[j] = listePoids[j+1]
+                listePoids[j+1] = reserve
+    
+    return listePoids
+
+
+
+
+def commencer(x=-1 , y=-1):
     """permet d'initialiser le debut de la partie et retourne 
     les coordonnées de la case de début sous la forme [x,y]
     si aucune case n'est donnée alors elle sera choisis aléatoirement
@@ -197,10 +229,10 @@ def parcours(x,y):
     else:
         fini = False
         i=0
-        voisin=voisins(x,y)
+        voisin = degre(x,y)
 
         while(not fini and i < len(voisin)):
-            x1,y1=voisin[i][0],voisin[i][1] #une double assignation
+            poids, (x1,y1)=voisin[i] #une double assignation
 
             if(verification(x1,y1)):
                 ajoutDeDeplacement(x1,y1)
@@ -266,41 +298,61 @@ def estCycle():
     voisin = voisins(x,y)
     cycle= False
     for v in voisin:
-        if verificationCycle(v[0],v[1]):
+        if verification(v[0],v[1]):
             if plateau[v[0]][v[1]] == 1:
                 cycle = True
     return cycle
 
+
+
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5 UPDATE : fonctionne
 def main(x=-1,y=-1):
-    """permet d'executer le script tout entier si vous ne mettez rien le 
-        cavalier partira d'une case aléatoire
-
-    Args:
-        x (int, optional): la coordonnées X d'ou part le cavalier. Defaults to -1.
-        y (int, optional): la coordonnées Y d'ou part le cavalier. Defaults to -1.
-    """
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
-    case_debut=commencer(x,y)#on selectionne la case du début
-    afficher()#on affiche l'echequier de basse
+    case_debut=commencer(x,y)
+    afficher()
     print("\n")
-    parcours(case_debut[0],case_debut[1])#on fait le parcourt
-    afficher()#on affiche une fois terminer
-    cycle = estCycle()#on dit a l'utilisateur si le chemin est un cycle
+    parcours(case_debut[0],case_debut[1])
+    afficher()
+    cycle = estCycle()
     if (cycle):
         print("le chemin est un cycle")
     else:
         print("le chemin n'est pas un cycle")
     
 
-
-
-
-
 ##ESPACE DESSIN
+#dessin avec matplotlib (non fonctionnel)
+def aff_graphique():
+    '''Affiche le plateau et dessine le parcours du cavalier
+        a l'aide du logiciel matplotlib'''
+    global taille
+    fig, aff = plt.subplots(
+        figsize=(10, 5),
+        facecolor="lightgrey",
+        layout="constrained",
+        subplot_kw={
+            "aspect": "equal"
+        }
+    )
+    plt.suptitle(
+        "Résolution du problème du cavalier",
+        fontsize=20,
+        weight="bold"
+    )
 
+    # CORRECTION ICI : np.indices attend un tuple (taille, taille)
+    chess = np.indices((taille, taille)).sum(axis=0) % 2
+
+    # On dessine sur l'axe 'aff'
+    aff.imshow(chess, cmap='gray')
+
+    # Réglages de l'axe
+
+    plt.show()
+
+#dessin avec turtle (fonctionnel)
 def cordonne(x, y):
     """ retourne la cordonnée du cavalier sur le graphe"""
     global Milieu_premiere_case
@@ -326,9 +378,8 @@ def case(x,y):
        CA.left(90)          #   tourne de 90° vers la gauche
 
 
-
 def echequier():
-    """dessiner un echequier et le deplacement du cavalier avec turtle
+    """dessiner un echequier avec turtle
     """
     global taille
     global compteur
@@ -355,9 +406,7 @@ def echequier():
         CA.goto(x,y)
 
 
-
-
-###Zone d'execution
 main(0,0)
 echequier()
+
 exitonclick()
