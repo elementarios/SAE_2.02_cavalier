@@ -242,6 +242,19 @@ def derniereP(etape):
 
     return [x,y]    
 
+def verificationCycle(x:int,y:int):
+    """verifie si la case rentre en parametre est valide et retourne un booléen
+
+    Args:
+        x (int): cordonnées X d'une case
+        y (int): cordonnées Y d'une case
+    """
+    global taille #global permet d'appeler la variable global et pas avoir une ambiguité
+    global plateau
+    Xvalide = x > -1 and x < taille
+    Yvalide = y > -1 and y < taille
+    return Xvalide and Yvalide 
+
 def estCycle():
     """retourne un true si le le chemin trouvé est un cycle"""
     global plateau
@@ -253,7 +266,7 @@ def estCycle():
     voisin = voisins(x,y)
     cycle= False
     for v in voisin:
-        if verification(v[0],v[1]):
+        if verificationCycle(v[0],v[1]):
             if plateau[v[0]][v[1]] == 1:
                 cycle = True
     return cycle
