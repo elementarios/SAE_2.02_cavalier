@@ -400,13 +400,14 @@ def echequier():
     CA.up()
     CA.goto(Milieu_premiere_case[0],Milieu_premiere_case[1])
     CA.down()
+    CA.speed(500)#<-----------------------------------------------modifier la vitesse ici
     for i in range(1,compteur+1):
         x,y=derniereP(i)
         x,y=cordonne(x,y)
         CA.goto(x,y)
 
 
-main(0,0)
+main()
 echequier()
 
 exitonclick()
