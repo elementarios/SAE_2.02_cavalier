@@ -48,6 +48,8 @@ def verification(x:int,y:int):
     Args:
         x (int): cordonnées X d'une case
         y (int): cordonnées Y d'une case
+    
+    return : un booléen sur la validité de la case
     """
     global taille #global permet d'appeler la variable global et pas avoir une ambiguité
     global plateau
@@ -67,7 +69,7 @@ def init(Ntaille):
     Initialise toutes les cases du plateau à zéro
     Docstring for créetableau
     
-    :param taille: Description
+    :param Ntaille: taille définie en amont
     """
     global plateau 
     global taille
@@ -116,6 +118,10 @@ def annulerCoup(x, y):
     """
     Annule le dernier coup fait en remettant zéro sur la case actuel et en decrementant le 
     compteur et retourne la position d'avant sous forme de tableau [x,y]
+
+    Args:
+        x (int): cordonnée x de la case d'arrivée
+        y (int): cordonnée y de la case d'arrivée
     """
     global compteur
     global plateau
@@ -135,6 +141,8 @@ def voisins(x,y):
     Args:
         x (int): Coordonées x de la case actuelle
         y (int): Coordonées y de la case actuelle
+
+    return : un tableau des différents voisins
     """
     global deplacement
     tab = [] #les tableau en python sont "étirable" donc pas besoin de mettre de taille
@@ -158,22 +166,28 @@ def degre(x,y):
     des coins les plus compliqués au début (Utilisation casi inexistante du backtracking).
     --------------------------
 
+    Args:
+        x (int): cordonnées X d'une case
+        y (int): cordonnées Y d'une case
+
+    return :
+        la liste contenant les couples degré des voisins et leur cordonnées
     '''
     global plateau
     global taille
     listePoids = [] #liste des poids des voisins et leur cordonnées
     voisin = voisins(x,y)
     for i in voisin:
-        if (verification(i[0], i[1]) and plateau[i[0]][i[1]] == 0): #
-            poids = 0
+        if (verification(i[0], i[1]) and plateau[i[0]][i[1]] == 0): 
+            poids = 0 #initialisation du degré
             voisin2 = voisins(i[0], i[1])
             for j in voisin2:
                 if (verification(j[0], j[1]) and plateau[j[0]][j[1]] == 0):
-                    poids += 1
+                    poids += 1 #augmentation du degré du voisin
             listePoids.append((poids, (i[0], i[1])))
 
     
-    
+    #tri a bulle croissant de la liste
     for i in range(len(listePoids)):
         for j in range(0, len(listePoids)-i-1):
             if (listePoids[j][0]>listePoids[j+1][0]):
@@ -194,6 +208,9 @@ def commencer(x=-1 , y=-1):
     Args:
         x (int, optional): coordonnées X de la case. Defaults to -1.
         y (int, optional): coordonnées Y de la case. Defaults to -1.
+
+    return :
+        la position x et y du cavalier
     """
     global plateau
     global taille
@@ -219,6 +236,8 @@ def parcours(x,y):
     
     :param x: coordonnée x(ligne) de la case de départ
     :param y: coordonnée y(colone) de la case de départ
+
+    return : un booléen qui indique que le parcours est fini
     """
     global compteur
     global nb_case
@@ -275,11 +294,13 @@ def derniereP(etape):
     return [x,y]    
 
 def verificationCycle(x:int,y:int):
-    """verifie si la case rentre en parametre est valide et retourne un booléen
+    """verifie si la case rentre en parametre est valide (Pour la version estCycle()) et retourne un booléen.
 
     Args:
         x (int): cordonnées X d'une case
         y (int): cordonnées Y d'une case
+
+    return : un booléen indiquant la validité de la case d'un voisin
     """
     global taille #global permet d'appeler la variable global et pas avoir une ambiguité
     global plateau
@@ -298,7 +319,7 @@ def estCycle():
     voisin = voisins(x,y)
     cycle= False
     for v in voisin:
-        if verification(v[0],v[1]):
+        if verificationCycle(v[0],v[1]):
             if plateau[v[0]][v[1]] == 1:
                 cycle = True
     return cycle
@@ -308,6 +329,12 @@ def estCycle():
 #PROGRAMME PRINCIPALE
 #test du programme avec tableau 5x5 UPDATE : fonctionne
 def main(x=-1,y=-1):
+    '''Fonctionnement principale du programme
+        
+        Args:
+            x (int): cordonnées X d'une case
+            y (int): cordonnées Y d'une case
+    '''
     taille = int(input("quelle taille doit faire le plateau: "))
     init(taille) #initialisation en fonction de la taille du plateau
     case_debut=commencer(x,y)
@@ -323,38 +350,15 @@ def main(x=-1,y=-1):
     
 
 ##ESPACE DESSIN
-#dessin avec matplotlib (non fonctionnel)
-def aff_graphique():
-    '''Affiche le plateau et dessine le parcours du cavalier
-        a l'aide du logiciel matplotlib'''
-    global taille
-    fig, aff = plt.subplots(
-        figsize=(10, 5),
-        facecolor="lightgrey",
-        layout="constrained",
-        subplot_kw={
-            "aspect": "equal"
-        }
-    )
-    plt.suptitle(
-        "Résolution du problème du cavalier",
-        fontsize=20,
-        weight="bold"
-    )
-
-    # CORRECTION ICI : np.indices attend un tuple (taille, taille)
-    chess = np.indices((taille, taille)).sum(axis=0) % 2
-
-    # On dessine sur l'axe 'aff'
-    aff.imshow(chess, cmap='gray')
-
-    # Réglages de l'axe
-
-    plt.show()
-
 #dessin avec turtle (fonctionnel)
-def cordonne(x, y):
-    """ retourne la cordonnée du cavalier sur le graphe"""
+#nous inversons x et y ici pour avoir un parcours a l'endroit.
+def cordonne(y, x):
+    """ retourne la cordonnée du cavalier sur le graphe
+    
+        Args:
+            x (int): cordonnées X d'une case
+            y (int): cordonnées Y d'une case    
+    """
     global Milieu_premiere_case
     global longueur_case
     x=Milieu_premiere_case[0]+(x * longueur_case)
@@ -366,20 +370,24 @@ def case(x,y):
     '''Remplit un carré d'arête longueur à partir du sommet (x, y).
     Le premier coté est tracé dans la direction initiale de la tortue.
     Le contour du carré est dessiné dans le sens horaire.
-    À la sortie, la tortue est en (x,y), dans la direction initiale'''
+    À la sortie, la tortue est en (x,y), dans la direction initiale
+    
+        Args:
+            x (int): cordonnées X d'une case
+            y (int): cordonnées Y d'une case
+    '''
     global longueur_case
-    CA.showturtle()
     CA.speed(2000)
     CA.up()                 # lève le crayon
     CA.goto(x, y)           # se déplace au point (x,y)
     CA.down()               # baisse le crayon         
     for k in range(4):      # quatre fois de suite
-       CA.forward(longueur_case)     #   trace un coté
-       CA.left(90)          #   tourne de 90° vers la gauche
+        CA.forward(longueur_case)     #   trace un coté
+        CA.left(90)          #   tourne de 90° vers la gauche
 
 
 def echequier():
-    """dessiner un echequier avec turtle
+    """dessiner un echequier et le chemin du cavalier avec turtle
     """
     global taille
     global compteur
@@ -395,13 +403,17 @@ def echequier():
         for j in range(taille):
             case(x,y)
             x+= longueur_case
-            cordonne(x, y)
         y-=longueur_case
     CA.up()
     CA.goto(Milieu_premiere_case[0],Milieu_premiere_case[1])
-    CA.down()
     CA.speed(500)#<-----------------------------------------------modifier la vitesse ici
-    for i in range(1,compteur+1):
+    #démarrage du chemin avec la première boucle
+    i = 1
+    x,y=derniereP(i)
+    x,y=cordonne(x,y)
+    CA.goto(x,y)
+    CA.down() #une petite optimisation du code ici
+    for i in range(2,compteur+1):
         x,y=derniereP(i)
         x,y=cordonne(x,y)
         CA.goto(x,y)
@@ -409,5 +421,5 @@ def echequier():
 
 main()
 echequier()
-
+#permet de laisser l'echiquier en fenêtre tant que l'on a pas cliqué
 exitonclick()
