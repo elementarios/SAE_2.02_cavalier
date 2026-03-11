@@ -3,8 +3,8 @@ Pour que le plateau de taille N x M possede un tour fermé il faut plusieurs con
 1) Que le plateau possede un nombre pair de case donc il ne faut pas que 
     N et M soit tout les deux des nombre impair (1 seul max).
 
-2) Que le cavalier puisse allez sur tout les case donc les plateau "ligne" et "colonne"
-    ne sont pas valable soit N et M doivent etre different de 1
+2) Que le cavalier puisse allez sur tout les case donc les plateau "ligne" et "colonne" ne sont pas valable 
+    soit N et M doivent etre different de 1
 
 3) Que le plus petit coté ne soit pas egale a 2 ou 4  car sinon le cavalier ne pourrait pas acceder 
     a toute les case (comme dans le cas du plateau 4x4)
